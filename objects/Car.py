@@ -39,10 +39,12 @@ class Car:
         #     self.y_vel -= math.sin(angle_rad) * 1 * self.thrust
 
     def rotate(self, dir: str):
+        speed = math.sqrt(self.x_vel**2 + self.y_vel**2)
+        angular_velocity = 2.5 - (speed / 20)
         if dir == "left":
-            self.angle += 4
+            self.angle += angular_velocity
         elif dir == "right":
-            self.angle -= 4
+            self.angle -= angular_velocity
 
         self.img = pygame.transform.rotate(self.original_img, self.angle)
         self.rect = self.img.get_rect(center=self.rect.center)
