@@ -55,8 +55,8 @@ spawn_space_rect.center = (400, 300)
 def create_asteroid_list():
     result: list[Asteroid] = []
 
-    while len(result) < 20:
-        asteroid = Asteroid('assets/images/characters/asteroid.png', 0, 0,
+    while len(result) < 1:
+        asteroid = Asteroid(0, 0,
             rect_max_x, rect_max_y)
         if not asteroid.rect.colliderect(spawn_space_rect):
             result.append(asteroid)
@@ -109,9 +109,9 @@ while True:
         if keys_pressed[pygame.K_RIGHT]:
             starship.rotate('right')
         if keys_pressed[pygame.K_UP]:
-            starship.go('up')
+            starship.go('forward')
         if keys_pressed[pygame.K_DOWN]:
-            starship.go('down')
+            starship.go('backward')
 
         if starship.rect.bottom > window_height:
             starship.rect.bottom = window_height
