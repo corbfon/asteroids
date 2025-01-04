@@ -4,7 +4,7 @@ from random import randint, random
 from util import load_image
 
 
-class Asteroid:
+class Ball:
     color = "blue"
     x_vel = 0
     y_vel = 0

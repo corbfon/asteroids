@@ -2,9 +2,9 @@ from random import randint
 
 import pygame
 
-from objects.Asteroid import Asteroid
+from objects.Ball import Ball
 from objects.Projectile import Projectile
-from objects.Starship import Car
+from objects.Car import Car
 from util import detect_events
 
 # configuration
@@ -52,16 +52,16 @@ spawn_space_rect.center = (400, 300)
 
 
 def create_asteroid_list():
-    result: list[Asteroid] = []
+    result: list[Ball] = []
 
     while len(result) < 1:
-        asteroid = Asteroid(0, 0, rect_max_x, rect_max_y)
+        asteroid = Ball(0, 0, rect_max_x, rect_max_y)
         if not asteroid.rect.colliderect(spawn_space_rect):
             result.append(asteroid)
     return result
 
 
-asteroids: list[Asteroid] = []
+balls: list[Ball] = []
 
 projectiles: list[Projectile] = []
 
@@ -93,10 +93,10 @@ while True:
 
         for event in events:
             if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
-                asteroids = create_asteroid_list()
+                balls = create_asteroid_list()
                 game_state = "running"
     elif game_state == "running":
-        if len(asteroids) == 0:
+        if len(balls) == 0:
             game_state = "won"
 
         for event in events:
@@ -104,6 +104,8 @@ while True:
                 projectiles.append(
                     Projectile(car.rect.centerx, car.rect.centery, car.angle)
                 )
+
+        car.calculate_physics(keys_pressed)
 
         if car.rect.bottom > window_height:
             car.rect.bottom = window_height
@@ -123,7 +125,7 @@ while True:
         pygame.draw.rect(screen, "white", screen.get_rect(), 2)
 
         # --- your code below ---
-        for asteroid in asteroids:
+        for asteroid in balls:
             screen.blit(asteroid.img, asteroid.rect)
             asteroid.move()
             if asteroid.rect.right > window_width:
@@ -143,13 +145,21 @@ while True:
 
         for proj in projectiles:
             pygame.draw.rect(screen, "white", proj.rect)
-            for asteroid in asteroids:
+            for asteroid in balls:
                 if proj.rect.colliderect(asteroid.rect):
-                    asteroids.remove(asteroid)
+                    balls.remove(asteroid)
                     projectiles.remove(proj)
             proj.move()
 
         screen.blit(car.img, car.rect)
+        # draw a white dotted line in the direction of the car's velocity
+        if car.x_vel != 0 or car.y_vel != 0:
+            start_pos = car.rect.center
+            end_pos = (
+                car.rect.centerx + car.x_vel * 10,
+                car.rect.centery - car.y_vel * 10,
+            )
+            pygame.draw.line(screen, "white", start_pos, end_pos, 1)
         car.move()
 
         # --- your code above ---
@@ -182,7 +192,7 @@ while True:
 
         for event in events:
             if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
-                asteroids = create_asteroid_list()
+                balls = create_asteroid_list()
                 car = Car(400, 300)
                 projectiles = []
                 game_state = "running"
@@ -214,7 +224,7 @@ while True:
 
         for event in events:
             if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
-                asteroids = create_asteroid_list()
+                balls = create_asteroid_list()
                 car = Car(400, 300)
                 projectiles = []
                 game_state = "running"
