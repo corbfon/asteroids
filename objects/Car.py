@@ -20,11 +20,6 @@ class Car:
         self.rect.center = (start_x, start_y)
 
     def calculate_physics(self, keys_pressed):
-        # # friction
-        # self.x_vel *= 0.99
-        # self.y_vel *= 0.99
-        speed = math.sqrt(self.x_vel**2 + self.y_vel**2)
-
         if keys_pressed[pygame.K_LEFT]:
             self.rotate("left")
         if keys_pressed[pygame.K_RIGHT]:
@@ -33,14 +28,10 @@ class Car:
             self.go("forward")
         if keys_pressed[pygame.K_DOWN]:
             self.go("backward")
-        # if keys_pressed[pygame.K_UP]:
-        #     angle_rad = math.radians(self.angle)
-        #     self.x_vel += math.cos(angle_rad) * 1 * self.thrust
-        #     self.y_vel -= math.sin(angle_rad) * 1 * self.thrust
 
     def rotate(self, dir: str):
         speed = math.sqrt(self.x_vel**2 + self.y_vel**2)
-        angular_velocity = 2.5 - (speed / 20)
+        angular_velocity = 2.5 - (speed / 40)
         if dir == "left":
             self.angle += angular_velocity
         elif dir == "right":
